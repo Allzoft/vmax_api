@@ -7,11 +7,14 @@ import { UsersController } from './users.controller';
 import { Phase } from './entities/phase.entity';
 import { PhasesController } from './phases.controller';
 import { PhasesService } from './services/phases.service';
+import { TaskTemplate } from './entities/taskTemplate.entity';
+import { TaskTemplatesController } from './taskTemplates.controller';
+import { TaskTemplatesService } from './services/taskTemplates.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users, Phase])],
-  controllers: [UsersController, PhasesController],
-  providers: [UsersService, PhasesService],
+  imports: [TypeOrmModule.forFeature([Users, Phase, TaskTemplate])],
+  controllers: [UsersController, PhasesController, TaskTemplatesController],
+  providers: [UsersService, PhasesService, TaskTemplatesService],
   exports: [UsersService],
 })
 export class UsersModule {}

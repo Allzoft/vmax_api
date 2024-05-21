@@ -2,24 +2,34 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Users } from './user.entity';
-import { TaskTemplate } from './taskTemplate.entity';
-import { Task } from './task.entity';
+import { Phase } from './phase.entity';
+
+export enum TypeTask {
+  SUBSCRIPCION = 'Subscripción',
+  MONETARIA = 'Monetaria',
+  RECOMENDACION = 'Recomendación',
+}
 
 @Entity()
-export class Phase {
+export class TaskTemplate {
   @PrimaryGeneratedColumn()
-  id_phase: number;
+  id_task_template: number;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   name: string;
 
+  @Column({ type: 'set', enum: TypeTask, default: TypeTask.SUBSCRIPCION })
+  type_task: TypeTask;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  task_link: string;
+
   @Column({ type: 'int', nullable: false })
-  task_number: number;
+  phaseIdPhase: number;
 
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
@@ -36,12 +46,6 @@ export class Phase {
   })
   updated_at: Date;
 
-  @OneToMany(() => Users, (user) => user.phase)
-  users: Users[];
-
-  @OneToMany(() => TaskTemplate, (taskTemplate) => taskTemplate.phase)
-  taskTemplates: TaskTemplate[];
-
-  @OneToMany(() => Task, (task) => task.phase)
-  tasks: Task[];
+  @ManyToOne(() => Phase, (phase) => phase.taskTemplates)
+  phase: Phase;
 }

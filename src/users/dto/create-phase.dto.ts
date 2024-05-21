@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { PrimaryGeneratedColumn } from 'typeorm';
 
 export class CreatePhaseDto {
@@ -11,5 +11,9 @@ export class CreatePhaseDto {
 
   @IsNumber()
   @IsNotEmpty()
+  task_number: number;
+
+  @IsNumber()
+  @IsOptional()
   status: number;
 }

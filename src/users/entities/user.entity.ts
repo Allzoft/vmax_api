@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Phase } from './phase.entity';
+import { Task } from './task.entity';
 
 @Entity()
 export class Users {
@@ -56,4 +58,7 @@ export class Users {
 
   @ManyToOne(() => Phase, (phase) => phase.users)
   phase: Phase;
+
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Task[];
 }
