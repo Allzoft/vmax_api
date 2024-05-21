@@ -9,6 +9,7 @@ import {
 import { Users } from './user.entity';
 import { TaskTemplate } from './taskTemplate.entity';
 import { Task } from './task.entity';
+import { OrderTemplate } from './orderTemplate.entity';
 
 @Entity()
 export class Phase {
@@ -41,6 +42,9 @@ export class Phase {
 
   @OneToMany(() => TaskTemplate, (taskTemplate) => taskTemplate.phase)
   taskTemplates: TaskTemplate[];
+
+  @OneToMany(() => OrderTemplate, (orderTemplate) => orderTemplate.phase)
+  orderTemplates: OrderTemplate[];
 
   @OneToMany(() => Task, (task) => task.phase)
   tasks: Task[];
