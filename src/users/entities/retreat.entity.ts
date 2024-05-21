@@ -23,6 +23,9 @@ export class Retreat {
   @Column({ type: 'varchar', length: 255, default: '' })
   bank_name: string;
 
+  @Column({ type: 'timestamp', nullable: false })
+  retreat_date: Date;
+
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   total_retreat: number;
 

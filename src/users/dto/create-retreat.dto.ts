@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { PrimaryGeneratedColumn } from 'typeorm';
 
 export class CreateRetreatDto {
@@ -20,6 +27,10 @@ export class CreateRetreatDto {
   @IsNumber()
   @IsNotEmpty()
   total_retreat: number;
+
+  @IsDate()
+  @Transform(({ value }) => value && new Date(value))
+  retreat_date: Date;
 
   @IsNumber()
   @IsNotEmpty()
