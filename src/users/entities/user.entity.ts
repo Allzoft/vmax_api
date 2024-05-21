@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  Generated,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Phase } from './phase.entity';
@@ -18,6 +19,10 @@ export class Users {
 
   @Column({ type: 'varchar', length: 200, nullable: false })
   name: string;
+
+  @Column()
+  @Generated('uuid')
+  uuid: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   email: string;
