@@ -25,6 +25,9 @@ import { OrdersService } from './services/orders.service';
 import { Retreat } from './entities/retreat.entity';
 import { RetreatsController } from './retreats.controller';
 import { RetreatsService } from './services/retreats.service';
+import { Credit } from './entities/credit.entity';
+import { CreditsController } from './credits.controller';
+import { CreditsService } from './services/credits.service';
 
 @Module({
   imports: [
@@ -37,6 +40,7 @@ import { RetreatsService } from './services/retreats.service';
       States,
       Order,
       Retreat,
+      Credit,
     ]),
   ],
   controllers: [
@@ -48,6 +52,7 @@ import { RetreatsService } from './services/retreats.service';
     StatesController,
     OrdersController,
     RetreatsController,
+    CreditsController,
   ],
   providers: [
     UsersService,
@@ -58,6 +63,7 @@ import { RetreatsService } from './services/retreats.service';
     StatesService,
     OrdersService,
     RetreatsService,
+    CreditsService,
   ],
   exports: [UsersService],
 })

@@ -16,6 +16,7 @@ import { Task } from './task.entity';
 import { Wallet } from './wallet.entity';
 import { Order } from './order.entity';
 import { Retreat } from './retreat.entity';
+import { Credit } from './credit.entity';
 
 @Entity()
 export class Users {
@@ -80,6 +81,9 @@ export class Users {
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @OneToMany(() => Credit, (credit) => credit.user)
+  credits: Credit[];
 
   @OneToOne(() => Wallet)
   @JoinColumn()
