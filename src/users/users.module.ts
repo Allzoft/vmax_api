@@ -16,10 +16,20 @@ import { TasksController } from './tasks.controller';
 import { Wallet } from './entities/wallet.entity';
 import { WalletsController } from './wallets.controller';
 import { WalletsService } from './services/wallets.service';
+import { States } from './entities/state.entity';
+import { StatesController } from './states.controller';
+import { StatesService } from './services/states.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, Phase, TaskTemplate, Task, Wallet]),
+    TypeOrmModule.forFeature([
+      Users,
+      Phase,
+      TaskTemplate,
+      Task,
+      Wallet,
+      States,
+    ]),
   ],
   controllers: [
     UsersController,
@@ -27,6 +37,7 @@ import { WalletsService } from './services/wallets.service';
     TaskTemplatesController,
     TasksController,
     WalletsController,
+    StatesController,
   ],
   providers: [
     UsersService,
@@ -34,6 +45,7 @@ import { WalletsService } from './services/wallets.service';
     TaskTemplatesService,
     TasksService,
     WalletsService,
+    StatesService,
   ],
   exports: [UsersService],
 })
