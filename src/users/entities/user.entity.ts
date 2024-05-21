@@ -7,10 +7,13 @@ import {
   ManyToOne,
   OneToMany,
   Generated,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Phase } from './phase.entity';
 import { Task } from './task.entity';
+import { Wallet } from './wallet.entity';
 
 @Entity()
 export class Users {
@@ -46,6 +49,9 @@ export class Users {
   @Column({ type: 'int', nullable: false })
   phaseIdPhase: number;
 
+  @Column({ type: 'int', nullable: false })
+  walletId: number;
+
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
 
@@ -66,4 +72,8 @@ export class Users {
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
+
+  @OneToOne(() => Wallet)
+  @JoinColumn()
+  wallet: Wallet;
 }

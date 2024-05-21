@@ -13,16 +13,28 @@ import { TaskTemplatesService } from './services/taskTemplates.service';
 import { Task } from './entities/task.entity';
 import { TasksService } from './services/tasks.service';
 import { TasksController } from './tasks.controller';
+import { Wallet } from './entities/wallet.entity';
+import { WalletsController } from './wallets.controller';
+import { WalletsService } from './services/wallets.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users, Phase, TaskTemplate, Task])],
+  imports: [
+    TypeOrmModule.forFeature([Users, Phase, TaskTemplate, Task, Wallet]),
+  ],
   controllers: [
     UsersController,
     PhasesController,
     TaskTemplatesController,
     TasksController,
+    WalletsController,
   ],
-  providers: [UsersService, PhasesService, TaskTemplatesService, TasksService],
+  providers: [
+    UsersService,
+    PhasesService,
+    TaskTemplatesService,
+    TasksService,
+    WalletsService,
+  ],
   exports: [UsersService],
 })
 export class UsersModule {}
