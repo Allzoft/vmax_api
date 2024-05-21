@@ -17,7 +17,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
-@ApiTags('orders')
+@ApiTags('users')
 @Controller('phases')
 export class PhasesController {
   constructor(private readonly phasesService: PhasesService) {}
