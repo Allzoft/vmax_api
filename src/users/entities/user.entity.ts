@@ -4,8 +4,10 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Phase } from './phase.entity';
 
 @Entity()
 export class Users {
@@ -34,6 +36,9 @@ export class Users {
   @Column({ type: 'tinyint', default: 1, comment: '1: enabled, 0: disabled' })
   isEnabled: number;
 
+  @Column({ type: 'int', nullable: false })
+  phaseIdPhase: number;
+
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
 
@@ -48,4 +53,7 @@ export class Users {
     nullable: false,
   })
   updated_at: Date;
+
+  @ManyToOne(() => Phase, (phase) => phase.users)
+  phase: Phase;
 }
