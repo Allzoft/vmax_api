@@ -12,6 +12,7 @@ export enum TypeTask {
   SUBSCRIPCION = 'Subscripción',
   MONETARIA = 'Monetaria',
   RECOMENDACION = 'Recomendación',
+  REGISTRATE = 'Registrate',
 }
 
 @Entity()

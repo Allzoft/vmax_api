@@ -4,7 +4,9 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Order } from './order.entity';
 
 export enum TypeState {
   ORDER = 'Order',
@@ -38,4 +40,7 @@ export class States {
     type: 'timestamp',
   })
   updated_at: Date;
+
+  @OneToMany(() => Order, (order) => order.state)
+  orders: Order[];
 }

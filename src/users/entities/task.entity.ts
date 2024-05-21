@@ -2,13 +2,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { TypeTask } from './taskTemplate.entity';
 import { Phase } from './phase.entity';
 import { Users } from './user.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class Task {
@@ -26,6 +29,9 @@ export class Task {
 
   @Column({ type: 'int', nullable: false })
   phaseIdPhase: number;
+
+  @Column({ type: 'int', nullable: true })
+  orderId: number;
 
   @Column({ type: 'int', nullable: false })
   userIdUser: number;
@@ -53,4 +59,8 @@ export class Task {
 
   @ManyToOne(() => Users, (user) => user.tasks)
   user: Users;
+
+  @OneToOne(() => Order)
+  @JoinColumn()
+  order: Order;
 }

@@ -14,6 +14,7 @@ import { Exclude } from 'class-transformer';
 import { Phase } from './phase.entity';
 import { Task } from './task.entity';
 import { Wallet } from './wallet.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class Users {
@@ -72,6 +73,9 @@ export class Users {
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 
   @OneToOne(() => Wallet)
   @JoinColumn()
