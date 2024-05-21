@@ -22,6 +22,9 @@ import { StatesService } from './services/states.service';
 import { Order } from './entities/order.entity';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './services/orders.service';
+import { Retreat } from './entities/retreat.entity';
+import { RetreatsController } from './retreats.controller';
+import { RetreatsService } from './services/retreats.service';
 
 @Module({
   imports: [
@@ -33,6 +36,7 @@ import { OrdersService } from './services/orders.service';
       Wallet,
       States,
       Order,
+      Retreat,
     ]),
   ],
   controllers: [
@@ -43,6 +47,7 @@ import { OrdersService } from './services/orders.service';
     WalletsController,
     StatesController,
     OrdersController,
+    RetreatsController,
   ],
   providers: [
     UsersService,
@@ -52,6 +57,7 @@ import { OrdersService } from './services/orders.service';
     WalletsService,
     StatesService,
     OrdersService,
+    RetreatsService,
   ],
   exports: [UsersService],
 })

@@ -15,6 +15,7 @@ import { Phase } from './phase.entity';
 import { Task } from './task.entity';
 import { Wallet } from './wallet.entity';
 import { Order } from './order.entity';
+import { Retreat } from './retreat.entity';
 
 @Entity()
 export class Users {
@@ -70,6 +71,9 @@ export class Users {
 
   @ManyToOne(() => Phase, (phase) => phase.users)
   phase: Phase;
+
+  @OneToMany(() => Retreat, (retreat) => retreat.user)
+  retreats: Retreat[];
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
