@@ -14,6 +14,10 @@ export class CreatePhaseDto {
   task_number: number;
 
   @IsNumber()
+  @IsNotEmpty()
+  level: number;
+
+  @IsNumber()
   @IsOptional()
   status: number;
 }

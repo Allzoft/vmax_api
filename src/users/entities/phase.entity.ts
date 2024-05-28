@@ -7,8 +7,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Users } from './user.entity';
-import { TaskTemplate } from './taskTemplate.entity';
-import { Task } from './task.entity';
 import { OrderTemplate } from './orderTemplate.entity';
 
 @Entity()
@@ -21,6 +19,9 @@ export class Phase {
 
   @Column({ type: 'int', nullable: false })
   task_number: number;
+
+  @Column({ type: 'int', nullable: false })
+  level: number;
 
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
@@ -40,12 +41,6 @@ export class Phase {
   @OneToMany(() => Users, (user) => user.phase)
   users: Users[];
 
-  @OneToMany(() => TaskTemplate, (taskTemplate) => taskTemplate.phase)
-  taskTemplates: TaskTemplate[];
-
   @OneToMany(() => OrderTemplate, (orderTemplate) => orderTemplate.phase)
   orderTemplates: OrderTemplate[];
-
-  @OneToMany(() => Task, (task) => task.phase)
-  tasks: Task[];
 }

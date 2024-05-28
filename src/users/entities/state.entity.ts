@@ -23,6 +23,9 @@ export class States {
   @Column({ type: 'varchar', length: 255, nullable: false })
   name: string;
 
+  @Column({ type: 'varchar', length: 255, default: 'Primary' })
+  severity: string;
+
   @Column({ type: 'set', enum: TypeState, default: TypeState.ORDER })
   type: TypeState;
 

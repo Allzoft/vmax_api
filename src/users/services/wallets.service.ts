@@ -6,17 +6,42 @@ import { CreateWalletDto } from '../dto/create-wallet.dto';
 import { UpdateWalletDto } from '../dto/update-wallet.dto';
 
 import { Wallet } from '../entities/wallet.entity';
+import { CreditsService } from './credits.service';
 
 @Injectable()
 export class WalletsService {
   constructor(
     @InjectRepository(Wallet)
     public walletsRepository: Repository<Wallet>,
+
+    private creditsService: CreditsService,
   ) {}
 
-  create(createWalletDto: CreateWalletDto) {
+  async create(createWalletDto: CreateWalletDto) {
     const newWallet = this.walletsRepository.create(createWalletDto);
-    return this.walletsRepository.save(newWallet);
+    return await this.walletsRepository.save(newWallet);
+  }
+
+  async createWalletNewUser(): Promise<Wallet> {
+    const newWallet = new Wallet();
+    newWallet.currency = 'USD';
+    newWallet.balance = 0.0;
+
+    try {
+      const saveWallet = await this.walletsRepository.save(newWallet);
+
+      const bonusAmount = await this.creditsService.welcomeCredit(
+        saveWallet.id_wallet,
+      );
+
+      saveWallet.balance = bonusAmount;
+
+      await this.walletsRepository.save(saveWallet);
+
+      return saveWallet;
+    } catch (error) {
+      throw new Error('Unable to create new wallet');
+    }
   }
 
   async findAll() {

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateCreditDto } from '../dto/create-credit.dto';
 import { UpdateCreditDto } from '../dto/update-credit.dto';
 
-import { Credit } from '../entities/credit.entity';
+import { Credit, TypeCredit } from '../entities/credit.entity';
 
 @Injectable()
 export class CreditsService {
@@ -17,6 +17,20 @@ export class CreditsService {
   create(createCreditDto: CreateCreditDto) {
     const newCredit = this.creditsRepository.create(createCreditDto);
     return this.creditsRepository.save(newCredit);
+  }
+
+  async welcomeCredit(idWallet: number): Promise<number> {
+    const newCredit = new Credit();
+    newCredit.credit_amount = 2 + Math.random() * 0.5;
+    newCredit.credit_date = new Date();
+    newCredit.previous_amount = 0.0;
+    newCredit.subsequent_amount = newCredit.credit_amount;
+    newCredit.type_credit = TypeCredit.BONO;
+    newCredit.walletIdWallet = idWallet;
+
+    const saveCredit = await this.creditsRepository.save(newCredit);
+
+    return saveCredit.credit_amount;
   }
 
   async findAll() {

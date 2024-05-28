@@ -16,6 +16,10 @@ export class CreateStateDto {
   @IsNotEmpty()
   name: string;
 
+  @IsString()
+  @IsNotEmpty()
+  severity: string;
+
   @IsEnum(TypeState)
   @IsNotEmpty()
   type: TypeState;

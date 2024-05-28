@@ -6,9 +6,13 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Users } from './user.entity';
+import { Wallet } from './wallet.entity';
 
 export enum TypeCredit {
+  BONO = 'Bono de registro',
+  BONO_DE_AFILIADO = 'Bono de afiliado',
+  CUPON = 'Cupon',
+  BONO_DE_USUARIO_VIP = 'Bono de usuario VIP',
   COBRO_DE_COMISION = 'Cobro de comisión',
   RECARGA = 'Recarga',
 }
@@ -26,7 +30,7 @@ export class Credit {
   type_credit: TypeCredit;
 
   @Column({ type: 'int', nullable: false })
-  userIdUser: number;
+  walletIdWallet: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   previous_amount: number;
@@ -55,6 +59,6 @@ export class Credit {
   })
   updated_at: Date;
 
-  @ManyToOne(() => Users, (user) => user.credits)
-  user: Users;
+  @ManyToOne(() => Wallet, (wallet) => wallet.credits)
+  wallet: Wallet;
 }

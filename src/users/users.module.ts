@@ -7,12 +7,6 @@ import { UsersController } from './users.controller';
 import { Phase } from './entities/phase.entity';
 import { PhasesController } from './phases.controller';
 import { PhasesService } from './services/phases.service';
-import { TaskTemplate } from './entities/taskTemplate.entity';
-import { TaskTemplatesController } from './taskTemplates.controller';
-import { TaskTemplatesService } from './services/taskTemplates.service';
-import { Task } from './entities/task.entity';
-import { TasksService } from './services/tasks.service';
-import { TasksController } from './tasks.controller';
 import { Wallet } from './entities/wallet.entity';
 import { WalletsController } from './wallets.controller';
 import { WalletsService } from './services/wallets.service';
@@ -37,8 +31,6 @@ import { OrderTemplatesService } from './services/orderTemplates.service';
     TypeOrmModule.forFeature([
       Users,
       Phase,
-      TaskTemplate,
-      Task,
       Wallet,
       States,
       Order,
@@ -50,8 +42,6 @@ import { OrderTemplatesService } from './services/orderTemplates.service';
   controllers: [
     UsersController,
     PhasesController,
-    TaskTemplatesController,
-    TasksController,
     WalletsController,
     StatesController,
     OrdersController,
@@ -62,8 +52,6 @@ import { OrderTemplatesService } from './services/orderTemplates.service';
   providers: [
     UsersService,
     PhasesService,
-    TaskTemplatesService,
-    TasksService,
     WalletsService,
     StatesService,
     OrdersService,

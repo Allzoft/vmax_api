@@ -27,9 +27,23 @@ export class OrdersController {
     return this.ordersService.create(createOrderDto);
   }
 
+  @Patch('payOrder/:id')
+  payOrder(
+    @Param('id') id: string,
+    @Body() dataOrder: { idUser: number; idOrder: number },
+  ) {
+    dataOrder.idOrder = +id;
+    return this.ordersService.sendFounsOrder(dataOrder);
+  }
+
   @Get()
   findAll() {
     return this.ordersService.findAll();
+  }
+
+  @Get('byUser/:id')
+  findAllByUser(@Param('id') id: string) {
+    return this.ordersService.findAllByUser(+id);
   }
 
   @Get(':id')

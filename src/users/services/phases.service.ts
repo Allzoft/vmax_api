@@ -14,9 +14,9 @@ export class PhasesService {
     public phasesRepository: Repository<Phase>,
   ) {}
 
-  create(createPhaseDto: CreatePhaseDto) {
+  async create(createPhaseDto: CreatePhaseDto) {
     const newPhase = this.phasesRepository.create(createPhaseDto);
-    return this.phasesRepository.save(newPhase);
+    return await this.phasesRepository.save(newPhase);
   }
 
   async findAll() {

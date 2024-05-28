@@ -10,12 +10,17 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { Users } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import { WalletsService } from './wallets.service';
+import { OrdersService } from './orders.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private userRepository: Repository<Users>,
+
+    private walletsService: WalletsService,
+    private ordersService: OrdersService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -41,7 +46,14 @@ export class UsersService {
     const hashPassword = await bcrypt.hash(newUser.password, 10);
     newUser.password = hashPassword;
 
+    const wallet = await this.walletsService.createWalletNewUser();
+    newUser.walletId = wallet.id_wallet;
+    newUser.wallet = wallet;
+    newUser.phaseIdPhase = 1;
+
     const savedUser = await this.userRepository.save(newUser);
+
+    // await this.tasksService.createTaskByUser(savedUser.id_user, 1);
 
     return savedUser;
   }
@@ -79,6 +91,7 @@ export class UsersService {
   async findbyemail(email: string) {
     const item = await this.userRepository.findOne({
       where: { email: email, status: 1 },
+      relations: ['wallet', 'phase.tasks.order', 'tasks'],
     });
 
     if (item) {
