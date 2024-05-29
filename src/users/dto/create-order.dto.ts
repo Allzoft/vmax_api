@@ -37,6 +37,10 @@ export class CreateOrderDto {
   quantity: number;
 
   @IsNumber()
+  @IsOptional()
+  category: number;
+
+  @IsNumber()
   @IsNotEmpty()
   total_price: number;
 

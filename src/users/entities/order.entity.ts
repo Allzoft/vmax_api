@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { States } from './state.entity';
 import { Users } from './user.entity';
+import { Phase } from './phase.entity';
 
 @Entity()
 export class Order {
@@ -21,6 +22,9 @@ export class Order {
   @Column({ type: 'int', nullable: false })
   stateIdState: number;
 
+  @Column({ type: 'int', default: 1 })
+  phaseIdPhase: number;
+
   @Column({ type: 'int', nullable: false })
   userIdUser: number;
 
@@ -32,6 +36,9 @@ export class Order {
 
   @Column({ type: 'int', nullable: false })
   quantity: number;
+
+  @Column({ type: 'int', nullable: false, default: 0 })
+  category: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   total_price: number;
@@ -66,4 +73,7 @@ export class Order {
 
   @ManyToOne(() => Users, (user) => user.orders)
   user: Users;
+
+  @ManyToOne(() => Phase, (phase) => phase.orders)
+  phase: Phase;
 }

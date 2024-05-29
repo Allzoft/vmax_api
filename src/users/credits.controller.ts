@@ -37,6 +37,15 @@ export class CreditsController {
     return this.creditsService.findOne(+id);
   }
 
+  @Get('byWallet/:id/:limit/:offset')
+  findByUser(
+    @Param('id') id: string,
+    @Param('limit') limit: string,
+    @Param('offset') offset: string,
+  ) {
+    return this.creditsService.findByWallet(+id, +limit, +offset);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCreditDto: UpdateCreditDto) {
     return this.creditsService.update(+id, updateCreditDto);

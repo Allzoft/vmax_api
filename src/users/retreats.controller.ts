@@ -37,6 +37,15 @@ export class RetreatsController {
     return this.retreatsService.findOne(+id);
   }
 
+  @Get('byWallet/:id/:limit/:offset')
+  findByUser(
+    @Param('id') id: string,
+    @Param('limit') limit: string,
+    @Param('offset') offset: string,
+  ) {
+    return this.retreatsService.findByWallet(+id, +limit, +offset);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRetreatDto: UpdateRetreatDto) {
     return this.retreatsService.update(+id, updateRetreatDto);

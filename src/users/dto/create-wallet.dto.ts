@@ -16,4 +16,16 @@ export class CreateWalletDto {
   @IsNumber()
   @IsOptional()
   status: number;
+
+  @IsNumber()
+  @IsOptional()
+  vip_1_earning: number;
+
+  @IsNumber()
+  @IsOptional()
+  vip_2_earning: number;
+
+  @IsNumber()
+  @IsOptional()
+  vip_3_earning: number;
 }

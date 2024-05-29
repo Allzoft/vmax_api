@@ -8,7 +8,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { OrdersService } from './services/orders.service';
+import { DataOrder, OrdersService } from './services/orders.service';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -28,12 +28,15 @@ export class OrdersController {
   }
 
   @Patch('payOrder/:id')
-  payOrder(
-    @Param('id') id: string,
-    @Body() dataOrder: { idUser: number; idOrder: number },
-  ) {
+  payOrder(@Param('id') id: string, @Body() dataOrder: DataOrder) {
     dataOrder.idOrder = +id;
     return this.ordersService.sendFounsOrder(dataOrder);
+  }
+
+  @Patch('confirmOrder/:id')
+  confirmOrder(@Param('id') id: string, @Body() dataOrder: DataOrder) {
+    dataOrder.idOrder = +id;
+    return this.ordersService.confirmationOrder(dataOrder);
   }
 
   @Get()

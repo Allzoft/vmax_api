@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { States } from './state.entity';
-import { Users } from './user.entity';
+import { Wallet } from './wallet.entity';
 
 @Entity()
 export class Retreat {
@@ -33,7 +33,7 @@ export class Retreat {
   stateIdState: number;
 
   @Column({ type: 'int', nullable: false })
-  userIdUser: number;
+  walletIdWallet: number;
 
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
@@ -53,6 +53,6 @@ export class Retreat {
   @ManyToOne(() => States, (state) => state.retreats)
   state: States;
 
-  @ManyToOne(() => Users, (user) => user.retreats)
-  user: Users;
+  @ManyToOne(() => Wallet, (wallet) => wallet.retreats)
+  wallet: Wallet;
 }

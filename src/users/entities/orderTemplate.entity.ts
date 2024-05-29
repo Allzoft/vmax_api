@@ -37,6 +37,9 @@ export class OrderTemplate {
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
 
+  @Column({ type: 'int', nullable: false, default: 0 })
+  category: number;
+
   @CreateDateColumn({
     type: 'timestamp',
     nullable: false,

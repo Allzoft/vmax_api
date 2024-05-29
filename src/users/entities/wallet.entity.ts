@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Credit } from './credit.entity';
+import { Retreat } from './retreat.entity';
 
 @Entity()
 export class Wallet {
@@ -22,6 +23,15 @@ export class Wallet {
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.0 })
+  vip_1_earnings: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.0 })
+  vip_2_earnings: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.0 })
+  vip_3_earnings: number;
+
   @CreateDateColumn({
     type: 'timestamp',
     nullable: false,
@@ -36,4 +46,7 @@ export class Wallet {
 
   @OneToMany(() => Credit, (credit) => credit.wallet)
   credits: Credit[];
+
+  @OneToMany(() => Retreat, (retreat) => retreat.wallet)
+  retreats: Retreat[];
 }

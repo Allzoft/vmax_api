@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Users } from './user.entity';
 import { OrderTemplate } from './orderTemplate.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class Phase {
@@ -43,4 +44,7 @@ export class Phase {
 
   @OneToMany(() => OrderTemplate, (orderTemplate) => orderTemplate.phase)
   orderTemplates: OrderTemplate[];
+
+  @OneToMany(() => Order, (order) => order.phase)
+  orders: Order[];
 }

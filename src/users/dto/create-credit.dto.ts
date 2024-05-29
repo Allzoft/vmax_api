@@ -18,15 +18,23 @@ export class CreateCreditDto {
   type_credit: TypeCredit;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   previous_amount: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  stateIdState: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  walletIdWallet: number;
 
   @IsNumber()
   @IsNotEmpty()
   credit_amount: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   subsequent_amount: number;
 
   @IsDate()

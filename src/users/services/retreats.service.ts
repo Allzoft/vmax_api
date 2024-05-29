@@ -29,6 +29,24 @@ export class RetreatsService {
     return list;
   }
 
+  async findByWallet(
+    wallet: number,
+    limit = 10,
+    offset = 0,
+  ): Promise<Retreat[]> {
+    const list = await this.retreatsRepository.find({
+      where: { status: 1, walletIdWallet: wallet },
+      take: limit,
+      skip: offset,
+    });
+
+    if (!list.length) {
+      throw new NotFoundException({ message: 'Lista vacía' });
+    }
+
+    return list;
+  }
+
   async findOne(id: number) {
     const item = await this.retreatsRepository.findOne({
       where: { id_retreat: id, status: 1 },

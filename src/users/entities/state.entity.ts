@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Order } from './order.entity';
 import { Retreat } from './retreat.entity';
+import { Credit } from './credit.entity';
 
 export enum TypeState {
   ORDER = 'Order',
@@ -50,4 +51,7 @@ export class States {
 
   @OneToMany(() => Retreat, (retreat) => retreat.state)
   retreats: Retreat[];
+
+  @OneToMany(() => Credit, (credit) => credit.state)
+  credits: Credit[];
 }

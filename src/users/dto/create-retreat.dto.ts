@@ -38,7 +38,7 @@ export class CreateRetreatDto {
 
   @IsNumber()
   @IsNotEmpty()
-  userIdUser: number;
+  walletIdWallet: number;
 
   @IsNumber()
   @IsOptional()

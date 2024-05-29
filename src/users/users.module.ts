@@ -25,6 +25,9 @@ import { CreditsService } from './services/credits.service';
 import { OrderTemplatesController } from './orderTemplates.controller';
 import { OrderTemplate } from './entities/orderTemplate.entity';
 import { OrderTemplatesService } from './services/orderTemplates.service';
+import { NotificationsController } from './notifications.controller';
+import { NotificationsService } from './services/notifications.service';
+import { Notification } from './entities/notification.entity';
 
 @Module({
   imports: [
@@ -37,6 +40,7 @@ import { OrderTemplatesService } from './services/orderTemplates.service';
       Retreat,
       Credit,
       OrderTemplate,
+      Notification,
     ]),
   ],
   controllers: [
@@ -48,6 +52,7 @@ import { OrderTemplatesService } from './services/orderTemplates.service';
     RetreatsController,
     CreditsController,
     OrderTemplatesController,
+    NotificationsController,
   ],
   providers: [
     UsersService,
@@ -58,6 +63,7 @@ import { OrderTemplatesService } from './services/orderTemplates.service';
     RetreatsService,
     CreditsService,
     OrderTemplatesService,
+    NotificationsService,
   ],
   exports: [UsersService],
 })

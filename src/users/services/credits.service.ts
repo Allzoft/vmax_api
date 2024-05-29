@@ -53,6 +53,25 @@ export class CreditsService {
     return item;
   }
 
+  async findByWallet(
+    wallet: number,
+    limit = 10,
+    offset = 0,
+  ): Promise<Credit[]> {
+    const list = await this.creditsRepository.find({
+      where: { status: 1, walletIdWallet: wallet },
+      take: limit,
+      skip: offset,
+      order: { credit_date: 'DESC' },
+    });
+
+    if (!list.length) {
+      throw new NotFoundException({ message: 'Lista vacía' });
+    }
+
+    return list;
+  }
+
   async update(id: number, updateWorkerDto: UpdateCreditDto) {
     const item = await this.creditsRepository.findOneBy({
       id_credit: id,

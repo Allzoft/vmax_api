@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Wallet } from './wallet.entity';
+import { States } from './state.entity';
 
 export enum TypeCredit {
   BONO = 'Bono de registro',
@@ -14,7 +15,7 @@ export enum TypeCredit {
   CUPON = 'Cupon',
   BONO_DE_USUARIO_VIP = 'Bono de usuario VIP',
   COBRO_DE_COMISION = 'Cobro de comisión',
-  RECARGA = 'Recarga',
+  FONDEO = 'Fondeo',
 }
 
 @Entity()
@@ -32,13 +33,16 @@ export class Credit {
   @Column({ type: 'int', nullable: false })
   walletIdWallet: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
+  @Column({ type: 'int', default: 5 })
+  stateIdState: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.0 })
   previous_amount: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.0 })
   credit_amount: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0.0 })
   subsequent_amount: number;
 
   @Column({ type: 'timestamp', nullable: false })
@@ -61,4 +65,7 @@ export class Credit {
 
   @ManyToOne(() => Wallet, (wallet) => wallet.credits)
   wallet: Wallet;
+
+  @ManyToOne(() => States, (state) => state.credits)
+  state: States;
 }

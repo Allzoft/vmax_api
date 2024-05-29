@@ -12,12 +12,16 @@ import { Users } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { WalletsService } from './wallets.service';
 import { OrdersService } from './orders.service';
+import { Phase } from '../entities/phase.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private userRepository: Repository<Users>,
+
+    @InjectRepository(Phase)
+    private phaseRepository: Repository<Phase>,
 
     private walletsService: WalletsService,
     private ordersService: OrdersService,
@@ -53,7 +57,12 @@ export class UsersService {
 
     const savedUser = await this.userRepository.save(newUser);
 
-    // await this.tasksService.createTaskByUser(savedUser.id_user, 1);
+    const firstOrder = await this.ordersService.firtsOrderByUser(
+      savedUser.id_user,
+    );
+
+    savedUser.orders = [];
+    savedUser.orders.push(firstOrder);
 
     return savedUser;
   }
@@ -71,17 +80,20 @@ export class UsersService {
   async findOne(id: number) {
     const item = await this.userRepository.findOne({
       where: { id_user: id, status: 1 },
+      relations: ['wallet', 'orders'],
     });
-    if (!item) {
-      throw new NotFoundException(`This user #${id} not found`);
-    }
-    return item;
-  }
 
-  async findOneUser(id: number) {
-    const item = await this.userRepository.findOne({
-      where: { id_user: id, status: 1 },
+    const phasesList = await this.phaseRepository.findOne({
+      where: {
+        id_phase: item.phaseIdPhase,
+        status: 1,
+        orders: { userIdUser: item.id_user, state: true },
+      },
+      relations: { orders: { state: true } },
     });
+
+    item.phase = phasesList;
+
     if (!item) {
       throw new NotFoundException(`This user #${id} not found`);
     }
@@ -91,8 +103,19 @@ export class UsersService {
   async findbyemail(email: string) {
     const item = await this.userRepository.findOne({
       where: { email: email, status: 1 },
-      relations: ['wallet', 'phase.tasks.order', 'tasks'],
+      relations: ['wallet', 'orders'],
     });
+
+    const phasesList = await this.phaseRepository.findOne({
+      where: {
+        id_phase: item.phaseIdPhase,
+        status: 1,
+        orders: { userIdUser: item.id_user, state: true },
+      },
+      relations: { orders: { state: true } },
+    });
+
+    item.phase = phasesList;
 
     if (item) {
       return item;
