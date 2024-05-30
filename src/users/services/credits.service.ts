@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -6,12 +10,24 @@ import { CreateCreditDto } from '../dto/create-credit.dto';
 import { UpdateCreditDto } from '../dto/update-credit.dto';
 
 import { Credit, TypeCredit } from '../entities/credit.entity';
+import { Notification } from '../entities/notification.entity';
+import { Wallet } from '../entities/wallet.entity';
+import { Users } from '../entities/user.entity';
 
 @Injectable()
 export class CreditsService {
   constructor(
     @InjectRepository(Credit)
     public creditsRepository: Repository<Credit>,
+
+    @InjectRepository(Notification)
+    public notificationsRepository: Repository<Notification>,
+
+    @InjectRepository(Wallet)
+    public walletsRepository: Repository<Wallet>,
+
+    @InjectRepository(Users)
+    public usersRepository: Repository<Users>,
   ) {}
 
   create(createCreditDto: CreateCreditDto) {
@@ -79,6 +95,57 @@ export class CreditsService {
     this.creditsRepository.merge(item, updateWorkerDto);
 
     return this.creditsRepository.save(item);
+  }
+
+  async aproveFound(data: { creditId: number; idUser: number }) {
+    const credit = await this.creditsRepository.findOne({
+      where: { id_credit: data.creditId },
+    });
+
+    if (!credit) {
+      throw new ConflictException('Error con el fondeo, intenta más tarde');
+    }
+
+    const user = await this.usersRepository.findOne({
+      where: { id_user: data.idUser },
+      relations: { wallet: true },
+    });
+    console.log(user);
+
+    if (!user) {
+      throw new ConflictException('Error con el usuario, intenta más tarde');
+    }
+
+    if (user.walletId !== credit.walletIdWallet) {
+      throw new ConflictException(
+        `Error, el fondeo ${credit.walletIdWallet} y el usuario ${user.id_user} con la wallet ${user.walletId} no coiciden, intenta más tarde`,
+      );
+    }
+
+    const wallet = user.wallet;
+
+    credit.previous_amount = +wallet.balance;
+    credit.stateIdState = 5;
+    credit.subsequent_amount = +wallet.balance + +credit.credit_amount;
+
+    await this.creditsRepository.save(credit);
+    const vipNumber = `vip_${user.phaseIdPhase}_earnings`;
+
+    wallet.balance = credit.subsequent_amount;
+    wallet[vipNumber] = +wallet[vipNumber] + +credit.credit_amount;
+
+    await this.walletsRepository.save(wallet);
+
+    const newNotification = new Notification();
+    newNotification.color = '#6EE030';
+    newNotification.tittle = 'Fondeo de cuenta exitoso';
+    newNotification.description = `El fondeo se completo exitosamente y se le adicionaron USD ${credit.credit_amount} a su cuenta - código ${credit.id_credit}`;
+    newNotification.icon = 'check-circle';
+    newNotification.isRead = 0;
+    newNotification.photo = 'welcom.png';
+    newNotification.userIdUser = user.id_user;
+
+    return await this.notificationsRepository.save(newNotification);
   }
 
   async remove(id: number) {

@@ -39,6 +39,7 @@ export class NotificationsService {
       where: { status: 1, userIdUser: userId },
       take: limit,
       skip: offset,
+      order: { created_at: 'DESC' },
     });
 
     if (!list.length) {
@@ -78,5 +79,22 @@ export class NotificationsService {
     this.notificationsRepository.merge(item, deleteNotification);
 
     return this.notificationsRepository.save(item);
+  }
+
+  async firstNotification(idUser: number, creditAmount: number) {
+    const newNotification = new Notification();
+    newNotification.color = '#6EE030';
+    newNotification.tittle = 'Bono de registro añadido';
+    newNotification.description = `Se le abono ${creditAmount} a su cuenta por su registro`;
+    newNotification.icon = 'check-circle';
+    newNotification.photo = 'welcom.png';
+    newNotification.isRead = 0;
+    newNotification.userIdUser = idUser;
+
+    try {
+      await this.notificationsRepository.save(newNotification);
+    } catch (error) {
+      console.error('Error al guardar la notificación:', error);
+    }
   }
 }

@@ -88,7 +88,7 @@ export class OrdersService {
 
     const randomTemplate = orderTemplates[randomIndex];
     const randomPricePerUnit = this.getRandomWithinRange(
-      randomTemplate.price_per_unit,
+      +randomTemplate.price_per_unit,
       0.1,
     );
 
@@ -98,12 +98,13 @@ export class OrdersService {
     newOrder.name = randomTemplate.name;
     newOrder.state = state;
     newOrder.stateIdState = 1;
+    newOrder.order_date = new Date();
     newOrder.photo = randomTemplate.photo;
     newOrder.price_per_unit = parseFloat(randomPricePerUnit.toFixed(2));
     newOrder.category = randomTemplate.category;
     newOrder.quantity = randomTemplate.quantity;
-    newOrder.commission = randomTemplate.commission;
-    newOrder.total_price = newOrder.price_per_unit * newOrder.quantity;
+    newOrder.commission = +randomTemplate.commission;
+    newOrder.total_price = +newOrder.price_per_unit * newOrder.quantity;
     newOrder.phaseIdPhase = 1;
 
     return await this.ordersRepository.save(newOrder);
@@ -127,12 +128,18 @@ export class OrdersService {
       throw new ConflictException('Error con la orden, intenta más tarde');
     }
 
+    if (user.id_user !== order.userIdUser) {
+      throw new ConflictException(
+        'Error, la orden y el usuario no coiciden, intenta más tarde',
+      );
+    }
+
     const wallet = { ...user.wallet };
 
     if (+wallet.balance < +order.total_price) {
       const difference = order.total_price - wallet.balance;
       throw new ConflictException(
-        `Fondos insuficientes. Recarga $${difference} para completar la diferencia`,
+        `Fondos insuficientes. Recarga $${difference.toFixed(2)} para completar la diferencia`,
       );
     }
 
@@ -156,7 +163,8 @@ export class OrdersService {
     newNotification.photo = order.photo;
     newNotification.userIdUser = user.id_user;
 
-    const saveNotification = this.notificationsRepository.save(newNotification);
+    const saveNotification =
+      await this.notificationsRepository.save(newNotification);
 
     return {
       notification: saveNotification,
@@ -181,6 +189,12 @@ export class OrdersService {
 
     if (!order) {
       throw new ConflictException('Error con la orden, intenta más tarde');
+    }
+
+    if (user.id_user !== order.userIdUser) {
+      throw new ConflictException(
+        'Error, la orden y el usuario no coiciden, intenta más tarde',
+      );
     }
 
     const wallet = { ...user.wallet };
@@ -231,6 +245,8 @@ export class OrdersService {
   }
 
   async createOrderByPayedPreviousOrder(user: Users): Promise<Order> {
+    console.log(user);
+
     const ordersUser = await this.ordersRepository.find({
       where: { phaseIdPhase: user.phaseIdPhase, userIdUser: user.id_user },
     });
@@ -245,6 +261,12 @@ export class OrdersService {
         ? user.phaseIdPhase + 1
         : user.phaseIdPhase;
 
+    console.log('OrdersComplete: ', ordersCompleted.length);
+    console.log(taskNumber);
+
+    console.log('phaseID:', user.phaseIdPhase);
+    console.log('phaseID+:', nextPhaseId);
+
     const ordersTemplate = await this.orderTemplatesRepository.find({
       where: { phaseIdPhase: nextPhaseId },
     });
@@ -257,7 +279,10 @@ export class OrdersService {
           )
         : ordersTemplate;
 
+    console.log('--------------------------', filteredOrdersTemplate);
+
     const randomTemplate = this.getRandomElement(filteredOrdersTemplate);
+
     const randomPricePerUnit = this.getRandomWithinRange(
       +randomTemplate.price_per_unit,
       0.1,
@@ -335,7 +360,7 @@ export class OrdersService {
     newOrder.category = template.category;
     newOrder.quantity = template.quantity;
     newOrder.commission = template.commission;
-    newOrder.total_price = newOrder.price_per_unit * newOrder.quantity;
+    newOrder.total_price = +newOrder.price_per_unit * +newOrder.quantity;
     newOrder.phaseIdPhase = phaseId;
     newOrder.order_date = new Date();
 

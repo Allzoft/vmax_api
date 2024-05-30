@@ -51,6 +51,16 @@ export class CreditsController {
     return this.creditsService.update(+id, updateCreditDto);
   }
 
+  @Patch('byFounded/:id')
+  updateFound(
+    @Param('id') id: string,
+    @Body() dataFound: { creditId: number; idUser: number },
+  ) {
+    dataFound.creditId = +id;
+    dataFound.idUser = dataFound.idUser;
+    return this.creditsService.aproveFound(dataFound);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.creditsService.remove(+id);

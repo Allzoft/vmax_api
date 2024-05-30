@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { WalletsService } from './wallets.service';
 import { OrdersService } from './orders.service';
 import { Phase } from '../entities/phase.entity';
+import { NotificationsService } from './notifications.service';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +26,7 @@ export class UsersService {
 
     private walletsService: WalletsService,
     private ordersService: OrdersService,
+    private notificationService: NotificationsService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -59,6 +61,11 @@ export class UsersService {
 
     const firstOrder = await this.ordersService.firtsOrderByUser(
       savedUser.id_user,
+    );
+
+    await this.notificationService.firstNotification(
+      savedUser.id_user,
+      wallet.balance,
     );
 
     savedUser.orders = [];
