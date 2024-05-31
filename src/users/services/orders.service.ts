@@ -47,7 +47,7 @@ export class OrdersService {
     private notificationsRepository: Repository<Notification>,
   ) {}
 
-  create(createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: CreateOrderDto) {
     const newOrder = this.ordersRepository.create(createOrderDto);
     return this.ordersRepository.save(newOrder);
   }
@@ -208,8 +208,10 @@ export class OrdersService {
     const wallet = { ...user.wallet };
 
     const previousMount = wallet.balance;
+    const vipNumber: string = `vip_${user.phaseIdPhase}_earnings`;
 
     wallet.balance = +wallet.balance + +order.total_price + +order.commission;
+    wallet[vipNumber] = +wallet[vipNumber] + +order.commission;
 
     await this.walletsRepository.save(wallet);
 
@@ -231,6 +233,11 @@ export class OrdersService {
     order.stateIdState = 3;
     order.state = state;
     const updatedOrder = await this.ordersRepository.save(order);
+
+    if (user.phaseIdPhase === 3 && order.name === 'Iphone 15 pro max 1 TB') {
+      user.isEnabled = 0;
+      await this.usersRepository.save(user);
+    }
 
     const newOrder = await this.createOrderByPayedPreviousOrder(user);
 
@@ -261,33 +268,63 @@ export class OrdersService {
 
     const ordersCompleted = ordersUser.filter(
       (order) => order.stateIdState === 3,
-    );
+    ).length;
 
     const taskNumber = user.phase.task_number;
-    const nextPhaseId =
-      ordersCompleted.length === taskNumber
+    const phaseId =
+      ordersCompleted === taskNumber
         ? user.phaseIdPhase + 1
         : user.phaseIdPhase;
 
-    console.log('OrdersComplete: ', ordersCompleted.length);
-    console.log(taskNumber);
+    let ordersTemplate: OrderTemplate[] = [];
 
-    console.log('phaseID:', user.phaseIdPhase);
-    console.log('phaseID+:', nextPhaseId);
-
-    const ordersTemplate = await this.orderTemplatesRepository.find({
-      where: { phaseIdPhase: nextPhaseId },
-    });
+    if (ordersCompleted === taskNumber) {
+      ordersTemplate = await this.orderTemplatesRepository.find({
+        where: { phaseIdPhase: phaseId, category: 0 },
+      });
+    } else {
+      if (ordersCompleted === 15 && phaseId === 2) {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 1 },
+        });
+      } else if (ordersCompleted === 12 && phaseId === 3) {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 1 },
+        });
+      } else if (ordersCompleted === 17 && phaseId === 3) {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 2 },
+        });
+      } else if (ordersCompleted === 21 && phaseId === 3) {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 3 },
+        });
+      } else if (ordersCompleted === 22 && phaseId === 3) {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 4 },
+        });
+      } else if (ordersCompleted === 24 && phaseId === 3) {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 5 },
+        });
+      } else if (ordersCompleted === 25 && phaseId === 3) {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 6 },
+        });
+      } else {
+        ordersTemplate = await this.orderTemplatesRepository.find({
+          where: { phaseIdPhase: phaseId, category: 0 },
+        });
+      }
+    }
 
     const filteredOrdersTemplate =
-      nextPhaseId === user.phaseIdPhase
+      phaseId === user.phaseIdPhase
         ? ordersTemplate.filter(
             (template) =>
               !ordersUser.map((order) => order.name).includes(template.name),
           )
         : ordersTemplate;
-
-    console.log('--------------------------', filteredOrdersTemplate);
 
     const randomTemplate = this.getRandomElement(filteredOrdersTemplate);
 
@@ -300,7 +337,7 @@ export class OrdersService {
       user,
       randomTemplate,
       randomPricePerUnit,
-      nextPhaseId,
+      phaseId,
     );
   }
 

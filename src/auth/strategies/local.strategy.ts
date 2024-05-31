@@ -16,7 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     const user = await this.authService.validateUser(email, password);
     if (!user) {
       throw new UnauthorizedException(
-        'Usuario no autorizado, consulte admnistración',
+        'Ocurrio un problema, porfavor contacte a soporte',
       );
     }
     return user;

@@ -122,6 +122,12 @@ export class CreditsService {
       );
     }
 
+    if (credit.stateIdState !== 4) {
+      throw new ConflictException(
+        `Error con el estado del fondeo, contacte a soporte`,
+      );
+    }
+
     const wallet = user.wallet;
 
     credit.previous_amount = +wallet.balance;
