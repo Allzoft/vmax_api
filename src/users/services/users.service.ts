@@ -148,6 +148,49 @@ export class UsersService {
     return savedUser;
   }
 
+  async updateVIP(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id_user: id },
+      relations: { wallet: true, orders: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`El usuario no se ha encontrado`);
+    }
+
+    const phase = await this.phaseRepository.findOne({
+      where: {
+        id_phase: user.phaseIdPhase,
+        status: 1,
+        orders: { userIdUser: user.id_user },
+      },
+      relations: { orders: true },
+    });
+
+    const taskNumber = phase.task_number;
+    const ordersCompleted = phase.orders.filter(
+      (order) => order.stateIdState === 3,
+    ).length;
+
+    if (taskNumber !== ordersCompleted) {
+      throw new NotFoundException(`Hubo un error, porfavor contacte a soporte`);
+    }
+
+    const nextPhase = await this.phaseRepository.findOne({
+      where: {
+        id_phase: user.phaseIdPhase + 1,
+        status: 1,
+        orders: { userIdUser: user.id_user, state: true },
+      },
+      relations: { orders: { state: true } },
+    });
+
+    user.phaseIdPhase = user.phaseIdPhase + 1;
+    user.phase = nextPhase;
+
+    return await this.userRepository.save(user);
+  }
+
   async remove(id: number) {
     const item = await this.userRepository.findOneBy({ id_user: id });
     const deleteUser: UpdateUserDto = {

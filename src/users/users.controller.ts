@@ -43,6 +43,11 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @Get('updateVIP/:id')
+  updateVIP(@Param('id') id: string) {
+    return this.usersService.updateVIP(+id);
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.usersService.remove(+id);

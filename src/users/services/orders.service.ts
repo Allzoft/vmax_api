@@ -134,6 +134,10 @@ export class OrdersService {
       );
     }
 
+    if (order.stateIdState !== 1) {
+      throw new ConflictException('Error, con el estado de la orden');
+    }
+
     const wallet = { ...user.wallet };
 
     if (+wallet.balance < +order.total_price) {
@@ -195,6 +199,10 @@ export class OrdersService {
       throw new ConflictException(
         'Error, la orden y el usuario no coiciden, intenta más tarde',
       );
+    }
+
+    if (order.stateIdState !== 2) {
+      throw new ConflictException('Error, con el estado de la orden');
     }
 
     const wallet = { ...user.wallet };
