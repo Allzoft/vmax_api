@@ -34,6 +34,7 @@ export class WalletsService {
         saveWallet.id_wallet,
       );
 
+      saveWallet.vip_1_earnings = bonusAmount;
       saveWallet.balance = bonusAmount;
 
       await this.walletsRepository.save(saveWallet);
