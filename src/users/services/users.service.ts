@@ -14,6 +14,7 @@ import { WalletsService } from './wallets.service';
 import { OrdersService } from './orders.service';
 import { Phase } from '../entities/phase.entity';
 import { NotificationsService } from './notifications.service';
+import { Wallet } from '../entities/wallet.entity';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +24,9 @@ export class UsersService {
 
     @InjectRepository(Phase)
     private phaseRepository: Repository<Phase>,
+
+    @InjectRepository(Wallet)
+    private walletRepository: Repository<Wallet>,
 
     private walletsService: WalletsService,
     private ordersService: OrdersService,
@@ -157,6 +161,17 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`El usuario no se ha encontrado`);
     }
+
+    let wallet = { ...user.wallet };
+
+    if (wallet.balance > 0.0) {
+      const nextPhase = user.phaseIdPhase + 1;
+      const vipNumber: string = `vip_${nextPhase}_earnings`;
+      wallet[vipNumber] = wallet.balance;
+      wallet = await this.walletRepository.save(wallet);
+    }
+
+    user.wallet = wallet;
 
     const phase = await this.phaseRepository.findOne({
       where: {
