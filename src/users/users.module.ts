@@ -28,6 +28,7 @@ import { OrderTemplatesService } from './services/orderTemplates.service';
 import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './services/notifications.service';
 import { Notification } from './entities/notification.entity';
+import { Affiliate } from './entities/affilate.entity';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { Notification } from './entities/notification.entity';
       Credit,
       OrderTemplate,
       Notification,
+      Affiliate,
     ]),
   ],
   controllers: [

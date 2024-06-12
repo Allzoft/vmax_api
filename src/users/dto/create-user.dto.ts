@@ -38,6 +38,10 @@ export class CreateUserDto {
   @IsOptional()
   isEnabled: number;
 
+  @IsString()
+  @IsOptional()
+  uuidAffiliate: string;
+
   @IsNumber()
   @IsOptional()
   status: number;

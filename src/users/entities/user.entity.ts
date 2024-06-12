@@ -15,6 +15,7 @@ import { Phase } from './phase.entity';
 import { Wallet } from './wallet.entity';
 import { Order } from './order.entity';
 import { Notification } from './notification.entity';
+import { Affiliate } from './affilate.entity';
 
 @Entity()
 export class Users {
@@ -53,6 +54,12 @@ export class Users {
   @Column({ type: 'int', nullable: false })
   walletId: number;
 
+  @Column({ type: 'int', nullable: true })
+  affiliateId: number;
+
+  @Column({ type: 'int', nullable: true })
+  affiliateIdAffiliate: number;
+
   @Column({ type: 'tinyint', default: 1, comment: '1: active, 0: delete' })
   status: number;
 
@@ -70,6 +77,9 @@ export class Users {
 
   @ManyToOne(() => Phase, (phase) => phase.users)
   phase: Phase;
+
+  @ManyToOne(() => Affiliate, (affiliate) => affiliate.users)
+  affiliate: Affiliate;
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];

@@ -15,6 +15,7 @@ import { OrdersService } from './orders.service';
 import { Phase } from '../entities/phase.entity';
 import { NotificationsService } from './notifications.service';
 import { Wallet } from '../entities/wallet.entity';
+import { Affiliate } from '../entities/affilate.entity';
 
 @Injectable()
 export class UsersService {
@@ -27,6 +28,9 @@ export class UsersService {
 
     @InjectRepository(Wallet)
     private walletRepository: Repository<Wallet>,
+
+    @InjectRepository(Affiliate)
+    private affiliateRepository: Repository<Affiliate>,
 
     private walletsService: WalletsService,
     private ordersService: OrdersService,
@@ -52,16 +56,42 @@ export class UsersService {
       );
     }
 
+    let affiliateIdAffiliate;
+
+    if (createUserDto.uuidAffiliate) {
+      const uuidAffiliate = createUserDto.uuidAffiliate;
+      delete createUserDto.uuidAffiliate;
+      const affiliateMain = await this.affiliateRepository.findOne({
+        where: { uuid: uuidAffiliate },
+      });
+      affiliateIdAffiliate = affiliateMain.id_affilitate;
+    }
+
     const newUser = this.userRepository.create(createUserDto);
     const hashPassword = await bcrypt.hash(newUser.password, 10);
     newUser.password = hashPassword;
 
+    //TODO
+    const newAffiliate = new Affiliate();
+    newAffiliate.email = newUser.email;
+    newAffiliate.name = newUser.name;
+    newAffiliate.phone = newUser.code_country + newUser.phone;
+    newAffiliate.email = newUser.email;
+    const savedAffiliate = await this.affiliateRepository.save(newAffiliate);
+
     const wallet = await this.walletsService.createWalletNewUser();
+    if (affiliateIdAffiliate) {
+      newUser.affiliateIdAffiliate = affiliateIdAffiliate;
+    }
     newUser.walletId = wallet.id_wallet;
     newUser.wallet = wallet;
+    newUser.affiliateId = savedAffiliate.id_affilitate;
     newUser.phaseIdPhase = 1;
 
     const savedUser = await this.userRepository.save(newUser);
+
+    savedAffiliate.uuid = savedUser.uuid;
+    await this.affiliateRepository.save(savedAffiliate);
 
     const firstOrder = await this.ordersService.firtsOrderByUser(
       savedUser.id_user,
