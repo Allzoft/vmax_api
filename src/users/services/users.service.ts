@@ -111,6 +111,7 @@ export class UsersService {
   async findAll() {
     const list = await this.userRepository.find({
       where: { status: 1 },
+      relations: { wallet: true, orders: true },
     });
     if (!list.length) {
       throw new NotFoundException({ message: 'lista vacia' });

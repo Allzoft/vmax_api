@@ -55,7 +55,10 @@ export class OrdersService {
   async findAll() {
     const list = await this.ordersRepository.find({
       where: { status: 1 },
+      relations: { user: true, state: true },
+      order: { order_date: 'DESC' },
     });
+
     if (!list.length) {
       throw new NotFoundException({ message: 'lista vacia' });
     }

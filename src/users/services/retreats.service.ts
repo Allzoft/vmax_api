@@ -61,6 +61,8 @@ export class RetreatsService {
   async findAll() {
     const list = await this.retreatsRepository.find({
       where: { status: 1 },
+      relations: { state: true, wallet: true },
+      order: { retreat_date: 'DESC' },
     });
     if (!list.length) {
       throw new NotFoundException({ message: 'lista vacia' });

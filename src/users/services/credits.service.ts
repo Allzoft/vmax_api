@@ -51,7 +51,9 @@ export class CreditsService {
 
   async findAll() {
     const list = await this.creditsRepository.find({
-      where: { status: 1 },
+      where: { status: 1, type_credit: TypeCredit.FONDEO },
+      relations: { state: true, wallet: true },
+      order: { credit_date: 'DESC' },
     });
     if (!list.length) {
       throw new NotFoundException({ message: 'lista vacia' });
@@ -62,6 +64,8 @@ export class CreditsService {
   async findOne(id: number) {
     const item = await this.creditsRepository.findOne({
       where: { id_credit: id, status: 1 },
+      relations: { state: true, wallet: true },
+      order: { credit_date: 'DESC' },
     });
     if (!item) {
       throw new NotFoundException(`This credit #${id} not found`);
