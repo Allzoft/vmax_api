@@ -13,4 +13,10 @@ export class AuthController {
     const user = req.user as Users;
     return this.authService.generateJWT(user);
   }
+  @UseGuards(AuthGuard('localCRM'))
+  @Post('login/crm')
+  loginCRM(@Req() req: any) {
+    const user = req.user as Users;
+    return this.authService.generateJWT(user);
+  }
 }

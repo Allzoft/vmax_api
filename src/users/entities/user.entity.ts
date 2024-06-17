@@ -48,6 +48,9 @@ export class Users {
   @Column({ type: 'tinyint', default: 1, comment: '1: enabled, 0: disabled' })
   isEnabled: number;
 
+  @Column({ type: 'tinyint', default: 0, comment: '1: enabled, 0: disabled' })
+  isEnabledToCrm: number;
+
   @Column({ type: 'int', nullable: false })
   phaseIdPhase: number;
 

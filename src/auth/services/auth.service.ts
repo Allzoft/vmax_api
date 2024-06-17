@@ -23,6 +23,16 @@ export class AuthService {
     return null;
   }
 
+  async validateUserCRM(email: string, password: string) {
+    const user = await this.usersService.findbyemail(email);
+    if (!user.isEnabledToCrm) return null;
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (user && isMatch) {
+      return user;
+    }
+    return null;
+  }
+
   async getUserLogById(idUser) {
     const user = await this.usersService.findOne(idUser);
     return user;
