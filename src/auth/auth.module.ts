@@ -11,6 +11,7 @@ import { AuthController } from './controllers/auth.controller';
 import config from './../config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from 'src/users/entities/user.entity';
+import { LocalStrategyCRM } from './strategies/localCRM.strategy';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { Users } from 'src/users/entities/user.entity';
       },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, LocalStrategyCRM, JwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })
