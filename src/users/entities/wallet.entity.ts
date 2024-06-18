@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Credit } from './credit.entity';
 import { Retreat } from './retreat.entity';
+import { Users } from './user.entity';
 
 @Entity()
 export class Wallet {
@@ -43,6 +45,9 @@ export class Wallet {
     nullable: false,
   })
   updated_at: Date;
+
+  @OneToOne(() => Users, (user) => user.wallet)
+  user: Users;
 
   @OneToMany(() => Credit, (credit) => credit.wallet)
   credits: Credit[];

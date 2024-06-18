@@ -52,7 +52,7 @@ export class CreditsService {
   async findAll() {
     const list = await this.creditsRepository.find({
       where: { status: 1, type_credit: TypeCredit.FONDEO },
-      relations: { state: true, wallet: true },
+      relations: { state: true, wallet: { user: true } },
       order: { credit_date: 'DESC' },
     });
     if (!list.length) {

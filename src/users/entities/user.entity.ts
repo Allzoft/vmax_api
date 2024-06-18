@@ -90,7 +90,7 @@ export class Users {
   @OneToMany(() => Notification, (notification) => notification.user)
   notifications: Notification[];
 
-  @OneToOne(() => Wallet)
+  @OneToOne(() => Wallet, (wallet) => wallet.user)
   @JoinColumn()
   wallet: Wallet;
 }

@@ -61,7 +61,7 @@ export class RetreatsService {
   async findAll() {
     const list = await this.retreatsRepository.find({
       where: { status: 1 },
-      relations: { state: true, wallet: true },
+      relations: { state: true, wallet: { user: true } },
       order: { retreat_date: 'DESC' },
     });
     if (!list.length) {
