@@ -13,6 +13,7 @@ import { Retreat } from '../entities/retreat.entity';
 import { Wallet } from '../entities/wallet.entity';
 import { Notification } from '../entities/notification.entity';
 import { Users } from '../entities/user.entity';
+import { States } from '../entities/state.entity';
 
 @Injectable()
 export class RetreatsService {
@@ -25,6 +26,9 @@ export class RetreatsService {
 
     @InjectRepository(Users)
     public usersRepository: Repository<Users>,
+
+    @InjectRepository(States)
+    public statesRepository: Repository<States>,
 
     @InjectRepository(Notification)
     public notificationsRepository: Repository<Notification>,
@@ -134,8 +138,18 @@ export class RetreatsService {
 
       await this.notificationsRepository.save(newNotification);
     }
+    const saveRetreat = await this.retreatsRepository.save(item);
 
-    return this.retreatsRepository.save(item);
+    saveRetreat.state = await this.statesRepository.findOne({
+      where: { id_state: saveRetreat.stateIdState },
+    });
+
+    saveRetreat.wallet = await this.walletRepository.findOne({
+      where: { id_wallet: saveRetreat.walletIdWallet },
+      relations: { user: true },
+    });
+
+    return saveRetreat;
   }
 
   async remove(id: number) {
