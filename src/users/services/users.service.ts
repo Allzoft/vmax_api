@@ -16,6 +16,8 @@ import { Phase } from '../entities/phase.entity';
 import { NotificationsService } from './notifications.service';
 import { Wallet } from '../entities/wallet.entity';
 import { Affiliate } from '../entities/affilate.entity';
+import { Credit, TypeCredit } from '../entities/credit.entity';
+import { Retreat } from '../entities/retreat.entity';
 
 @Injectable()
 export class UsersService {
@@ -31,6 +33,12 @@ export class UsersService {
 
     @InjectRepository(Affiliate)
     private affiliateRepository: Repository<Affiliate>,
+
+    @InjectRepository(Credit)
+    private creditsRepository: Repository<Credit>,
+
+    @InjectRepository(Retreat)
+    private retreatsRepository: Repository<Retreat>,
 
     private walletsService: WalletsService,
     private ordersService: OrdersService,
@@ -112,10 +120,32 @@ export class UsersService {
     const list = await this.userRepository.find({
       where: { status: 1 },
       relations: { wallet: true, orders: true },
+      order: { created_at: 'DESC' },
     });
     if (!list.length) {
       throw new NotFoundException({ message: 'lista vacia' });
     }
+
+    await Promise.all(
+      list.map(async (item) => {
+        const credits = await this.creditsRepository.find({
+          where: {
+            walletIdWallet: item.walletId,
+            status: 1,
+            type_credit: TypeCredit.FONDEO,
+          },
+        });
+        item.wallet.credits = credits;
+        const retreats = await this.retreatsRepository.find({
+          where: {
+            walletIdWallet: item.walletId,
+            status: 1,
+          },
+        });
+        item.wallet.retreats = retreats;
+      }),
+    );
+
     return list;
   }
 
