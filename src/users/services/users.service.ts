@@ -178,6 +178,10 @@ export class UsersService {
       relations: ['wallet', 'orders'],
     });
 
+    if (!item) {
+      throw new NotFoundException(`El usuario ${email} no se ha encontrado`);
+    }
+
     const phasesList = await this.phaseRepository.findOne({
       where: {
         id_phase: item.phaseIdPhase,
