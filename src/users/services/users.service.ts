@@ -226,9 +226,16 @@ export class UsersService {
     let wallet = { ...user.wallet };
 
     if (wallet.balance > 0.0) {
+      const credit = await this.creditsRepository.findOne({
+        where: {
+          type_credit: TypeCredit.BONO,
+          walletIdWallet: wallet.id_wallet,
+        },
+      });
+
       const nextPhase = user.phaseIdPhase + 1;
       const vipNumber: string = `vip_${nextPhase}_earnings`;
-      wallet[vipNumber] = wallet.balance;
+      wallet[vipNumber] = wallet.balance - +credit.credit_amount;
       wallet = await this.walletRepository.save(wallet);
     }
 
